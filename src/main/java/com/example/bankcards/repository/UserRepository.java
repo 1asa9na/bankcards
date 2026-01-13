@@ -11,6 +11,6 @@ public interface UserRepository {
     void update(User user);
     void create(User user);
     void insertUserRole(Long userId, Role role);
-    void isAccountOwner(Long userId, Long cardId);
+    void isAccountOwner(Long userId, Long accountId);
     void delete(Long userId);
 }

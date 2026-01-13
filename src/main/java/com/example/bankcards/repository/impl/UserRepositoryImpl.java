@@ -44,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void isAccountOwner(Long userId, Long accountId) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isCardOwner'");
+        throw new UnsupportedOperationException("Unimplemented method 'isAccountOwner'");
     }
 
     @Override

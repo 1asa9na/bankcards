@@ -3,10 +3,14 @@ package com.example.bankcards.repository.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
+import com.example.bankcards.config.mapper.IgnoreUnmappedMapperConfig;
 import com.example.bankcards.dto.user.UserDto;
 import com.example.bankcards.entity.user.User;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(
+    componentModel = MappingConstants.ComponentModel.SPRING,
+    config = IgnoreUnmappedMapperConfig.class
+)
 public interface UserMapper {
     UserDto toDto(User user);
     User toEntity(UserDto dto);
