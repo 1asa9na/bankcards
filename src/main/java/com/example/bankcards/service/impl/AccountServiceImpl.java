@@ -3,38 +3,48 @@ package com.example.bankcards.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankcards.entity.account.Account;
+import com.example.bankcards.exception.ResourceNotFoundException;
+import com.example.bankcards.repository.AccountRepository;
 import com.example.bankcards.service.AccountService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    private final AccountRepository accountRepository;
+
     @Override
+    @Transactional(readOnly = true)
     public Account getById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getById'");
+        return accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Account> getAllByUserId(Long userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllByUserId'");
+        return accountRepository.findAllByUserId(userId);
     }
 
     @Override
+    @Transactional
     public Account update(Account account) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        accountRepository.update(account);
+        return account;
     }
 
     @Override
-    public Account create(Account account) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    @Transactional
+    public Account create(Account account, Long userId) {
+        return null;
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'delete'");

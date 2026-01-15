@@ -17,9 +17,9 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<Card> getAllByUserId(Long userId) {
+    public List<Card> getAllByAccountId(Long accountId) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllByUserId'");
+        throw new UnsupportedOperationException("Unimplemented method 'getAllByAccountId'");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card create(Card card) {
+    public Card create(Card card, Long accountId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'create'");
     }

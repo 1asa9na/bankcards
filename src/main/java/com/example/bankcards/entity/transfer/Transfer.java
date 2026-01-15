@@ -1,4 +1,4 @@
-package com.example.bankcards.entity.order;
+package com.example.bankcards.entity.transfer;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.example.bankcards.entity.account.Account;
+import com.example.bankcards.entity.card.Card;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,10 +23,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "transfers")
 @Getter
 @Setter
-public class Order {
+public class Transfer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,19 +34,19 @@ public class Order {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "src_account_id")
-    private Account srcAccount;
+    @JoinColumn(name = "src_card_id")
+    private Card srcCard;
 
     @ManyToOne
-    @JoinColumn(name = "dest_account_id")
-    private Account destAccount;
+    @JoinColumn(name = "dest_card_id")
+    private Card destCard;
 
     @Column(name = "amount")
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private OrderStatus status;
+    private TransferStatus status;
 
     @Column(name = "created_at")
     @CreationTimestamp

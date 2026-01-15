@@ -8,6 +8,6 @@ public interface AccountService {
     Account getById(Long id);
     List<Account> getAllByUserId(Long userId);
     Account update(Account account);
-    Account create(Account account);
+    Account create(Account account, Long userId);
     void delete(Long userId);
 }

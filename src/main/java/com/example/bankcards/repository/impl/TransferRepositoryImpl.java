@@ -6,32 +6,32 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
-import com.example.bankcards.entity.order.Order;
-import com.example.bankcards.repository.OrderRepository;
+import com.example.bankcards.entity.transfer.Transfer;
+import com.example.bankcards.repository.TransferRepository;
 
 @Repository
-public class OrderRepositoryImpl implements OrderRepository {
+public class TransferRepositoryImpl implements TransferRepository {
 
     @Override
-    public Optional<Order> findById(UUID id) {
+    public Optional<Transfer> findById(UUID id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
     @Override
-    public List<Order> findAllBySrcAccountIdOrDestAccountId(Long accountId) {
+    public List<Transfer> findAllBySrcAccountIdOrDestAccountId(Long accountId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAllBy'");
     }
 
     @Override
-    public void create(Order order) {
+    public void create(Transfer order) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
     @Override
-    public void update(Order order) {
+    public void update(Transfer order) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }

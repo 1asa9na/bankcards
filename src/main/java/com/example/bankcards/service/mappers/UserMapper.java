@@ -1,4 +1,4 @@
-package com.example.bankcards.repository.mappers;
+package com.example.bankcards.service.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

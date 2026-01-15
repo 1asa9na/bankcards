@@ -32,7 +32,7 @@ public class CardDto {
     @NotNull(message = "PAN must not be null.", groups = OnCreate.class)
     @NotBlank(message = "PAN must not be empty.", groups = OnCreate.class)
     @Length(min = 13, max = 19, message = "PAN must contain 13 - 19 numbers", groups = OnCreate.class)
-    @Pattern(regexp = "[0-9]+", message = "PAN must contain only numbers", groups = OnCreate.class)
+    @Pattern(regexp = "^[0-9 ]+$", message = "PAN must contain only numbers", groups = OnCreate.class)
     private String pan;
 
     @NotNull(message = "Expiration date must be not null.", groups = {OnUpdate.class, OnCreate.class})
