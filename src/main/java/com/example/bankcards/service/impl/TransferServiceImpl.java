@@ -35,14 +35,14 @@ public class TransferServiceImpl implements TransferService {
     @Override
     @Transactional(readOnly = true)
     public List<Transfer> getAllBySrcAccountIdOrDestAccountId(Long accountId) {
-        return transferRepository.findAllBySrcAccountIdOrDestAccountId(accountId);
+        return transferRepository.findAllBySrcCardIdOrDestCardId(accountId, accountId);
     }
 
     @Override
     @Transactional
     public Transfer create(Transfer transfer) {
-        transfer.setStatus(TransferStatus.PENDING);
-        transferRepository.create(transfer);
+        transferRepository.save(transfer);
+
         Account srcAccount = transfer.getSrcCard().getAccount();
         Account destAccount = transfer.getDestCard().getAccount();
 

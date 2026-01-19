@@ -21,7 +21,6 @@ public class CardDto {
     @NotNull(message = "Id must be not null.", groups = OnUpdate.class)
     private Long id;
 
-    @NotNull(message = "Account id must be not null.", groups = {OnUpdate.class, OnCreate.class})
     private Long accountId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

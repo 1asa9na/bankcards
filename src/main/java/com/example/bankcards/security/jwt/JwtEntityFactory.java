@@ -1,4 +1,4 @@
-package com.example.bankcards.security;
+package com.example.bankcards.security.jwt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class JwtEntityFactory {
             user.getId(),
             user.getName(),
             user.getUsername(),
-            user.getEncryptedPassword(),
+            user.getPassword(),
             mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
         );
     }

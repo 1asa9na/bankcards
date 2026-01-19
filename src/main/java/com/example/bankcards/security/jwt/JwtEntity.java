@@ -1,4 +1,4 @@
-package com.example.bankcards.security;
+package com.example.bankcards.security.jwt;
 
 import java.util.Collection;
 

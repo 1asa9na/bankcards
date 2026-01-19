@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
 import com.example.bankcards.config.mapper.IgnoreUnmappedMapperConfig;
 import com.example.bankcards.dto.transfer.TransferDto;
@@ -27,4 +28,8 @@ public interface TransferMapper {
     @Mapping(target = "srcCard", source = "srcCardId")
     @Mapping(target = "destCard", source = "destCardId")
     Transfer toEntity(TransferDto transferDto);
+
+    @Mapping(target = "srcCard", source = "srcCardId")
+    @Mapping(target = "destCard", source = "destCardId")
+    Transfer toEntity(TransferDto transferDto, @MappingTarget Transfer transfer);
 }

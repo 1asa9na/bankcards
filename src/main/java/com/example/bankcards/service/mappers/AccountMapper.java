@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
 import com.example.bankcards.config.mapper.IgnoreUnmappedMapperConfig;
 import com.example.bankcards.dto.account.AccountDto;
@@ -25,4 +26,7 @@ public abstract class AccountMapper {
 
     @Mapping(target = "user", source = "userId")
     public abstract Account toEntity(AccountDto accountDto);
+
+    @Mapping(target = "user", source = "userId")
+    public abstract Account toEntity(AccountDto accountDto, @MappingTarget Account account);
 }

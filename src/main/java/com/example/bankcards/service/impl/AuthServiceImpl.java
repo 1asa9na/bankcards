@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import com.example.bankcards.dto.auth.JwtRequest;
 import com.example.bankcards.dto.auth.JwtResponse;
 import com.example.bankcards.entity.user.User;
-import com.example.bankcards.security.JwtTokenProvider;
+import com.example.bankcards.exception.AccessDeniedException;
+import com.example.bankcards.security.jwt.JwtTokenProvider;
 import com.example.bankcards.service.AuthService;
 import com.example.bankcards.service.UserService;
 
@@ -35,7 +36,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse refresh(String refreshToken) {
-        return tokenProvider.refreshUserTokens(refreshToken);
+        JwtResponse jwtResponse = new JwtResponse();
+        if(!tokenProvider.validateToken(refreshToken)) {
+            throw new AccessDeniedException();
+        }
+        Long userId = Long.valueOf(tokenProvider.getId(refreshToken));
+        User user = userService.getById(userId);
+        jwtResponse.setId(userId);
+        jwtResponse.setUsername(user.getUsername());
+        jwtResponse.setAccessToken(tokenProvider.createAccessToken(userId, user.getUsername(), user.getRoles()));
+        jwtResponse.setRefreshToken(tokenProvider.createRefreshToken(userId, user.getUsername()));
+        return jwtResponse;
     }
-    
 }

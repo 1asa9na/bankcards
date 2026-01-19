@@ -1,6 +1,8 @@
 package com.example.bankcards.controller;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import com.example.bankcards.dto.user.UserDto;
 import com.example.bankcards.dto.validation.OnCreate;
 import com.example.bankcards.dto.validation.OnUpdate;
 import com.example.bankcards.entity.account.Account;
+import com.example.bankcards.entity.user.Role;
 import com.example.bankcards.entity.user.User;
 import com.example.bankcards.service.AccountService;
 import com.example.bankcards.service.UserService;
@@ -54,16 +57,25 @@ public class UserController {
 
     @PutMapping
     public UserDto update(@Validated(OnUpdate.class) @RequestBody UserDto dto) {
-        User user = userMapper.toEntity(dto);
+        User user = userService.getById(dto.getId());
+        user = userMapper.toEntity(dto, user);
         User updatedUser = userService.update(user);
         return userMapper.toDto(updatedUser);
     }
 
     @PostMapping("/{id}/accounts")
     public AccountDto createAccount(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody AccountDto dto) {
+        dto.setUserId(id);
         Account account = accountMapper.toEntity(dto);
         Account createdAccount = accountService.create(account, id);
         return accountMapper.toDto(createdAccount);
+    }
+
+    @PostMapping("/{id}/roles")
+    public UserDto insertRoles(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody Set<String> rolesStrings) {
+        Set<Role> roles = rolesStrings.stream().map(Role::valueOf).collect(Collectors.toSet());
+        User user = userService.updateRoles(id, roles);
+        return userMapper.toDto(user);
     }
 
     @GetMapping("/{id}/accounts")

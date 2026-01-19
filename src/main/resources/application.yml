@@ -8,10 +8,13 @@ spring:
     init:
       mode: always
       continue-on-error: false
-      data-locations: classpath:demo_data.sql
+      #data-locations: classpath:demo_data.sql
 
 security:
   jwt:
-    secret: a2pmbmtqbmFmZm5ramtqZnZmbmZuZmtqbmZmbmprZmpuZmtuamtkbmp2a2puZHZram5ram5kdmtuamFuYQ==
+    secret: RFNGTkNGRFNJblNETmNqc2RuY2puZGpzY25oakJEQ0hTZGNiZ2JzZGJjaGpiaGJIQkhCU0NESA==
     access: 3600000
     refresh: 2592000000
+  pan:
+    hmac-key: UhmkEmjnEvFFT26D
+    aes-key: svW6Dx5v8CteQRc7

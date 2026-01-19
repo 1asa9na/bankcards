@@ -1,14 +1,17 @@
 package com.example.bankcards.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bankcards.entity.account.Account;
+import com.example.bankcards.entity.user.User;
 import com.example.bankcards.exception.ResourceNotFoundException;
 import com.example.bankcards.repository.AccountRepository;
 import com.example.bankcards.service.AccountService;
+import com.example.bankcards.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final UserService userService;
 
     @Override
     @Transactional(readOnly = true)
@@ -33,21 +37,24 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Account update(Account account) {
-        accountRepository.update(account);
+        accountRepository.save(account);
         return account;
     }
 
     @Override
     @Transactional
     public Account create(Account account, Long userId) {
-        return null;
+        User user = userService.getById(userId);
+        account.setUser(user);
+        account.setBalance(BigDecimal.ZERO);
+        accountRepository.save(account);
+        return account;
     }
 
     @Override
     @Transactional
-    public void delete(Long userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    public void delete(Long accountId) {
+        accountRepository.deleteById(accountId);
     }
     
 }

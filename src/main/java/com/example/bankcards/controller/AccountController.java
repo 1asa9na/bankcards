@@ -34,13 +34,13 @@ public class AccountController {
 
     private final AccountService accountService;
     private final AccountMapper accountMapper;
-
     private final CardService cardService;
     private final CardMapper cardMapper;
 
     @PutMapping
     public AccountDto update(@Validated(OnUpdate.class) @RequestBody AccountDto dto) {
-        Account account = accountMapper.toEntity(dto);
+        Account account = accountService.getById(dto.getId());
+        account = accountMapper.toEntity(dto, account);
         Account updatedAccount = accountService.update(account);
         return accountMapper.toDto(updatedAccount);
     }
@@ -64,6 +64,7 @@ public class AccountController {
     
     @PostMapping("/{id}/cards")
     public CardDto createCard(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody CardDto dto) {
+        dto.setAccountId(id);
         Card card = cardMapper.toEntity(dto);
         Card createdCard = cardService.create(card, id);
         return cardMapper.toDto(createdCard);

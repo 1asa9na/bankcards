@@ -7,11 +7,9 @@ import lombok.Data;
 
 @Component
 @Data
-@ConfigurationProperties(prefix = "security.jwt")
-public class JwtProperties {
-
-    private String secret;
-    private Long access;
-    private Long refresh;
-
+@ConfigurationProperties(prefix = "security.pan")
+public class PanSecurityProperties {
+    
+    private String hmacKey;
+    private String aesKey;
 }

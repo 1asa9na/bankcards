@@ -1,4 +1,4 @@
-package com.example.bankcards.security;
+package com.example.bankcards.security.jwt;
 
 import java.util.Date;
 import java.util.List;
@@ -6,17 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import com.example.bankcards.dto.auth.JwtResponse;
 import com.example.bankcards.entity.user.Role;
-import com.example.bankcards.entity.user.User;
-import com.example.bankcards.exception.AccessDeniedException;
-import com.example.bankcards.service.UserService;
 import com.example.bankcards.service.props.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -30,9 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class JwtTokenProvider {
     
     private final JwtProperties jwtProperties;
-
-    private final UserDetailsService userDetailsService;
-    private final UserService userService;
 
     private SecretKey key;
 
@@ -70,32 +58,21 @@ public class JwtTokenProvider {
                 .and()
             .issuedAt(now)
             .expiration(validity)
-            .signWith(key)
+            .signWith(key, 
+                        Jwts.SIG.HS256)
             .compact();
     }
 
-    public JwtResponse refreshUserTokens(String refreshToken) {
-        JwtResponse jwtResponse = new JwtResponse();
-        if(!validateToken(refreshToken)) {
-            throw new AccessDeniedException();
-        }
-        Long userId = Long.valueOf(getId(refreshToken));
-        User user = userService.getById(userId);
-        jwtResponse.setId(userId);
-        jwtResponse.setUsername(user.getUsername());
-        jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getRoles()));
-        jwtResponse.setRefreshToken(createRefreshToken(userId, user.getUsername()));
-        return jwtResponse;
-    }
+    
 
     public boolean validateToken(String token) {
-        Jws<Claims> claims = Jwts.parser().decryptWith(key).build().parseSignedClaims(token);
-        return claims.getPayload().getExpiration().before(new Date());
+        Jws<Claims> claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+        return claims.getPayload().getExpiration().after(new Date());
     }
 
-    private String getId(String token) {
+    public String getId(String token) {
         return Jwts.parser()
-            .decryptWith(key)
+            .verifyWith(key)
             .build()
             .parseSignedClaims(token)
             .getPayload()
@@ -103,19 +80,13 @@ public class JwtTokenProvider {
             .toString();
     }
 
-    private String getUsername(String token) {
+    public String getUsername(String token) {
         return Jwts.parser()
-                .decryptWith(key)
+                .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject()
                 .toString();
-    }
-
-    public Authentication getAuthentication(String token) {
-        String username = getUsername(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
     }
 }

@@ -1,43 +1,63 @@
 package com.example.bankcards.service.impl;
 
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bankcards.entity.account.Account;
 import com.example.bankcards.entity.card.Card;
+import com.example.bankcards.entity.card.CardStatus;
+import com.example.bankcards.exception.OperationDeniedException;
+import com.example.bankcards.exception.ResourceNotFoundException;
+import com.example.bankcards.repository.CardRepository;
+import com.example.bankcards.service.AccountService;
 import com.example.bankcards.service.CardService;
+import com.example.bankcards.util.PanEncoder;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
+    private final CardRepository cardRepository;
+    private final AccountService accountService;
+    private final PanEncoder panEncoder;
+
     @Override
+    @Transactional(readOnly = true)
     public Card getById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getById'");
+        return cardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Card not found."));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Card> getAllByAccountId(Long accountId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllByAccountId'");
+        return cardRepository.findAllByAccountId(accountId);
     }
 
     @Override
-    public Card update(Card card) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
-
-    @Override
+    @Transactional
     public Card create(Card card, Long accountId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        if(card.getExpirationDate().isBefore(YearMonth.now())) {
+            throw new OperationDeniedException("Card is expired.");
+        }
+        String pan = card.getPanEncrypted();
+        card.setPanEncrypted(panEncoder.encrypt(pan));
+        card.setPanHash(panEncoder.hash(pan));
+        card.setPanMask(panEncoder.mask(pan));
+        card.setStatus(CardStatus.STATUS_ACTIVE);
+        Account account = accountService.getById(accountId);
+        card.setAccount(account);
+        cardRepository.save(card);
+        return card;
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        cardRepository.deleteById(id);
     }
-    
 }
