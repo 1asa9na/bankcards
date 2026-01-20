@@ -1,9 +1,32 @@
-# 
-# docker-compose.yml — определяет сервисы для разработки и тестирования.
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bankcards
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=mysql_native_password
 
-Что нужно сделать:
-  - Настроить сервисы для:
-      - PostgreSQL (или MySQL) с начальной базой.
-      - Приложения Spring Boot (если нужно).
-  - Открыть нужные порты (например, 5432, 8080).
-  - Настроить volume для хранения данных БД.
+  app:
+    build: .
+    container_name: maven_app
+    depends_on:
+      - db
+    environment:
+      DB_URL: jdbc:mysql://db:3306/bankcards
+      DB_USER: appuser
+      DB_PASSWORD: apppass
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - maven_repo:/root/.m2
+    command: >
+      bash -c "mvn clean package && mvn liquibase:update"
+
+volumes:
+  maven_repo:

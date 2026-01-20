@@ -38,6 +38,9 @@ public class CardDto {
     @JsonFormat(pattern = "yyyy-MM")
     private YearMonth expirationDate;
 
+    @NotBlank(message = "Owner name must not be empty.", groups = { OnCreate.class, OnUpdate.class } )
+    @Length(max = 255, message = "Owner name length limit reached.", groups = OnCreate.class)
+    private String ownerName;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CardStatus status;

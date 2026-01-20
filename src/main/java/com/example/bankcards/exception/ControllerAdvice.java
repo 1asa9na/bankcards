@@ -28,6 +28,12 @@ public class ControllerAdvice {
         return new ExceptionBody(error.getMessage());
     }
 
+    @ExceptionHandler(OperationDeniedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleOperaionDeniedException(ResourceMappingException error) {
+        return new ExceptionBody(error.getMessage());
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleIllegalStateException(IllegalStateException error) {

@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `cards` (
   `pan_mask` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration_date` char(7) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

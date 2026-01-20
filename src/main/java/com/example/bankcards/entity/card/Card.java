@@ -48,6 +48,9 @@ public class Card {
     @Column(name = "expiration_date")
     private YearMonth expirationDate;
 
+    @Column(name = "owner_name")
+    private String ownerName;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private CardStatus status;
