@@ -60,6 +60,10 @@ public class TransferServiceImpl implements TransferService {
 
         YearMonth now = YearMonth.now();
 
+        if(!transferRepository.findByIdempotencyKey(transfer.getId()).isEmpty()) {
+            throw new OperationDeniedException("Transfer is already operated.");
+        }
+
         if(transfer.getSrcCard().getExpirationDate().isBefore(now)) {
             throw new OperationDeniedException("Source card is expired.");
         }

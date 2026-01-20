@@ -1,6 +1,7 @@
 package com.example.bankcards.service.impl;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -58,7 +58,22 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public boolean isAccountOwner(Long userId, Long accountId) {
         User user = getById(userId);
-        return userRoleRepository.isAccountOwner(user, accountId);
+        return userRepository.isAccountOwner(user, accountId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isCardOwner(Long userId, Long cardId) {
+        User user = getById(userId);
+        return userRepository.isCardOwner(user, cardId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isTransferParticipant(Long userId, UUID transferId) {
+        User user = getById(userId);
+        return userRepository.isTranferParticipant(user, transferId);
+        
     }
 
     @Override
@@ -74,7 +89,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("User already exists.");
         }
         if (!user.getPassword().equals(user.getPasswordConfirmation())) {
-            throw new IllegalStateException("Password don't match.");
+            throw new IllegalStateException("Passwords don't match.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPasswordConfirmation(null);

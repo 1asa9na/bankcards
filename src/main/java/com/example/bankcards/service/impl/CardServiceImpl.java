@@ -60,4 +60,24 @@ public class CardServiceImpl implements CardService {
     public void delete(Long id) {
         cardRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void block(Long id) {
+        Card card = getById(id);
+        card.setStatus(CardStatus.STATUS_BLOCKED);
+        cardRepository.save(card);
+    }
+
+    @Override
+    @Transactional
+    public void unblock(Long id) {
+        Card card = getById(id);
+        if (card.getExpirationDate().isBefore(YearMonth.now())) {
+            card.setStatus(CardStatus.STATUS_EXPIRED);
+        } else {
+            card.setStatus(CardStatus.STATUS_ACTIVE);
+        }
+        cardRepository.save(card);
+    }
 }

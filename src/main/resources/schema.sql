@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `transfers` (
   `dest_card_id` bigint NOT NULL,
   `amount` decimal(19,4) NOT NULL,
   `status` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `idempotency_key` binary(16) NOT NULL UNIQUE,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -55,6 +56,9 @@ CREATE TABLE IF NOT EXISTS `transfers` (
   CONSTRAINT `fk_transfers_dest_card` FOREIGN KEY (`dest_card_id`) REFERENCES `cards` (`id`),
   CONSTRAINT `fk_transfers_src_card` FOREIGN KEY (`src_card_id`) REFERENCES `cards` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE UNIQUE INDEX `uq_transfer_idempotency_key`
+ON `transfers` (`idempotency_key`);
 
 
 

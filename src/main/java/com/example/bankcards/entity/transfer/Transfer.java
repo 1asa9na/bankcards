@@ -48,6 +48,9 @@ public class Transfer {
     @Column(name = "status")
     private TransferStatus status;
 
+    @Column(name = "idempotency_key")
+    private UUID idempotencyKey;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;

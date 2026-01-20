@@ -1,6 +1,7 @@
 package com.example.bankcards.repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -37,4 +38,27 @@ public interface UserRepository extends JpaRepository<User, Long> {
             )
             """)
     boolean isAccountOwner(@Param("user") User user, @Param("account_id") Long accountId);
+
+    @Query("""
+        SELECT exists(
+                SELECT 1
+                FROM Card c
+                WHERE c.id = :card_id
+                AND c.account.user = :user
+        )
+        """)
+    boolean isCardOwner(@Param("user") User user, @Param("card_id") Long cardId);
+
+    @Query("""
+        SELECT exists (
+                SELECT 1
+                FROM Transfer t
+                WHERE t.id = :transfer_id
+                AND (
+                        t.srcCard.account.user = :user
+                        OR t.destCard.account.user = :user
+                )
+        )
+        """)
+    boolean isTranferParticipant(@Param("user") User user, @Param("transfer_id") UUID transferId);
 }

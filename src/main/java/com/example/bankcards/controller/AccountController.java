@@ -2,6 +2,7 @@ package com.example.bankcards.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ public class AccountController {
     private final CardMapper cardMapper;
 
     @PutMapping
+    @PreAuthorize("@customSecurityExpression:canAccessAccount(#dto.id)")
     public AccountDto update(@Validated(OnUpdate.class) @RequestBody AccountDto dto) {
         Account account = accountService.getById(dto.getId());
         account = accountMapper.toEntity(dto, account);
@@ -46,23 +48,27 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression:canAccessAccount(#id)")
     public AccountDto getById(@PathVariable Long id) {
         Account account = accountService.getById(id);
         return accountMapper.toDto(account);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression:canAccessAccount(#id)")
     public void delete(@PathVariable Long id) {
         accountService.delete(id);
     }
 
     @GetMapping("/{id}/cards")
+    @PreAuthorize("@customSecurityExpression:canAccessAccount(#id)")
     public List<CardDto> getCardsByAccountId(@PathVariable Long id) {
         List<Card> cards = cardService.getAllByAccountId(id);
         return cardMapper.toDto(cards);
     }
     
     @PostMapping("/{id}/cards")
+    @PreAuthorize("@customSecurityExpression:canAccessAccount(#id)")
     public CardDto createCard(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody CardDto dto) {
         dto.setAccountId(id);
         Card card = cardMapper.toEntity(dto);

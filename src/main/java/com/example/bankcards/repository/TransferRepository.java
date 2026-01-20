@@ -10,4 +10,6 @@ import com.example.bankcards.entity.transfer.Transfer;
 public interface TransferRepository extends JpaRepository<Transfer, UUID> {
 
     List<Transfer> findAllBySrcCardIdOrDestCardId(Long srcCardId, Long destCardId);
+
+    List<Transfer> findByIdempotencyKey(UUID idempotencyKey);
 }

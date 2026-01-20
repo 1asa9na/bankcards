@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,17 +46,20 @@ public class UserController {
     private final AccountMapper accountMapper;
     
     @GetMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression:canAccessUser(#id)")
     public UserDto getById(@PathVariable Long id) {
         User user = userService.getById(id);
         return userMapper.toDto(user);
     }
     
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression:canAccessUser(#id)")
     public void delete(@PathVariable Long id) {
         userService.delete(id);
     }
 
     @PutMapping
+    @PreAuthorize("@customSecurityExpression:canAccessUser(#dto.id)")
     public UserDto update(@Validated(OnUpdate.class) @RequestBody UserDto dto) {
         User user = userService.getById(dto.getId());
         user = userMapper.toEntity(dto, user);
@@ -64,6 +68,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/accounts")
+    @PreAuthorize("@customSecurityExpression:canAccessUser(#id)")
     public AccountDto createAccount(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody AccountDto dto) {
         dto.setUserId(id);
         Account account = accountMapper.toEntity(dto);
@@ -72,6 +77,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/roles")
+    @PreAuthorize("@customSecurityExpression:canInsertRoles(#id)")
     public UserDto insertRoles(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody Set<String> rolesStrings) {
         Set<Role> roles = rolesStrings.stream().map(Role::valueOf).collect(Collectors.toSet());
         User user = userService.updateRoles(id, roles);
@@ -79,6 +85,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/accounts")
+    @PreAuthorize("@customSecurityExpression:canAccessUser(#id)")
     public List<AccountDto> getAccountsByUserId(@PathVariable Long id) {
         List<Account> accounts = accountService.getAllByUserId(id);
         return accountMapper.toDto(accounts);

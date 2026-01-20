@@ -9,4 +9,6 @@ public interface CardService {
     List<Card> getAllByAccountId(Long accountId);
     Card create(Card card, Long accountId);
     void delete(Long id);
+    void block(Long id);
+    void unblock(Long id);
 }
